@@ -25,7 +25,8 @@ func main() {
 		// convert decimal to thai text (baht) and print the result here
 		result, err := thaicurrency.Decimal(input)
 		if err != nil {
-			panic(err)
+			fmt.Printf("Error converting %v: %v\n", input, err)
+			continue
 		}
 		fmt.Println(result)
 	}
