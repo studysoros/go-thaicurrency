@@ -51,3 +51,23 @@ You can run the provided example in the `cmd` directory:
 ```bash
 go run .\cmd\example\main.go
 ```
+
+## Limitations
+
+### Float64 Precision with Large Numbers
+
+When using `decimal.NewFromFloat()` with very large numbers, you may encounter precision loss due to the inherent limitations of `float64` (which has ~15-17 significant decimal digits of precision).
+
+**Example of precision loss:**
+
+```go
+// ❌ The .01 will be lost due to float64 precision limits
+decimal.NewFromFloat(9223372036854775000.01)
+// Actually becomes: 9223372036854776000 (no decimal part!)
+
+// ✅ Use RequireFromString for exact precision
+decimal.RequireFromString("9223372036854775000.01")
+// Correctly preserves: 9223372036854775000.01
+```
+
+**Recommendation:** For amounts exceeding 15 significant digits or when precision is critical, always use `decimal.RequireFromString()` instead of `decimal.NewFromFloat()`.
