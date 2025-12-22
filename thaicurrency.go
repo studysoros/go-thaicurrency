@@ -15,7 +15,7 @@ var (
 )
 
 func Decimal(amount decimal.Decimal) (string, error) {
-	formattedAmount := amount.String()
+	formattedAmount := amount.StringFixed(2)
 	return convert(formattedAmount)
 }
 
