@@ -158,7 +158,7 @@ func buildThaiString(bahtText, satangText string) string {
 		return "ศูนย์บาทถ้วน"
 	}
 	if bahtText == "" {
-		bahtText = "ศูนย์"
+		return satangText
 	}
 	return bahtText + "บาท" + satangText
 }
