@@ -2,21 +2,35 @@ package thaicurrency
 
 import (
 	"errors"
+	"math"
 	"strings"
 
 	"github.com/shopspring/decimal"
 )
 
 var (
-	ErrTooManyDecimals = errors.New("decimal point more than 2 digits")
+	ErrTooManyDecimals   = errors.New("decimal point more than 2 digits")
+	ErrInputExceedsLimit = errors.New("input exceeds maximum limit")
+
+	maxInt64 = decimal.NewFromInt(math.MaxInt64)
 
 	digitWords = []string{"ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า", "สิบ"}
 	placeWords = []string{"", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน"}
 )
 
 func Decimal(amount decimal.Decimal) (string, error) {
+	if err := validateAmountLimit(amount); err != nil {
+		return "", err
+	}
 	formattedAmount := amount.StringFixed(2)
 	return convert(formattedAmount)
+}
+
+func validateAmountLimit(amount decimal.Decimal) error {
+	if amount.GreaterThan(maxInt64) {
+		return ErrInputExceedsLimit
+	}
+	return nil
 }
 
 func convert(amount string) (string, error) {
